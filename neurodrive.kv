@@ -1,0 +1,98 @@
+#:kivy 1.0.9
+
+
+<Voiture>:
+    size: self.size
+    
+        
+    canvas:
+        Color:
+            rgba: self.color
+        Rectangle:
+            pos: self.x , self.y 
+            size: self.size 
+            source: "./Images/v.png"
+            
+            
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: self.theta * 57.295
+            origin: self.x , self.y +15
+    canvas.after:
+        PopMatrix
+
+<MsgSave>:
+    size_hint: .5, .3
+    title: "Sauvegarder"
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Sauvegarder sous quel nom ?"
+        TextInput:
+            id: nom_fichier
+            text: root.texte_defaut
+            size_hint: 1,0.5
+        Label:
+            size_hint:1,0.2
+        BoxLayout:
+            size_hint: 1, 0.6
+            padding: 1
+            Button:
+                text: "Annuler"
+                on_press: root.dismiss()
+            Button:
+                text: "Ok"
+                on_press: root.enregistrer_sauvegarde(nom_fichier.text)
+            
+<NeuroDriveGame>:
+    Image:
+        id: image_fond
+        source: "./Circuits/Circuit_couleur_1.png"
+        size: root.width, root.height
+
+            
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                on_press: root.quit()
+                size_hint: 0.5,1
+                Image:
+                    source:  "./Images/retour.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                size_hint: 0.5,1
+                PlayPause:
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    on_state: self.clic(self)
+            Label:
+                font_size: 20
+                text: "Generation: " + str(root.generation)
+            Button:
+                on_press: root.evolue()
+                Image:
+                    source:  "./Images/refresh.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                on_press: root.sauvegarder()
+                Image:
+                    source:  "./Images/save.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                
+
+            Spinner:
+                text: 'Circuit basique'
+                values: ('Circuit basique', 'Circuit desert', 'Circuit neige')
+                on_text:
+                    root.changer_circuit(self.text)
+
+        
+        Label:
+            size_hint: 1,16
